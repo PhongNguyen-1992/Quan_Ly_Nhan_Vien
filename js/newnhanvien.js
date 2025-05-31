@@ -1,35 +1,36 @@
 class Nhan__Vien {
-    constructor(_taiKhoan,_name,_email,_passWord,_tbNgay,_tbLuongCB,_chucVu,_gioLam)
-    {
+    constructor(_taiKhoan, _name, _email, _passWord, _ngayLam, _luongCB, _chucVu, _gioLam) {
         this.taiKhoan = _taiKhoan;
         this.name = _name;
         this.email = _email;
         this.passWord = _passWord;
-        this.tbNgay = _tbNgay;
-        this.tbLuongCB = _tbLuongCB;
-        this.chucVU = _chucVu;
-        this.gioLam = _gioLam;
-        this.toTalSalary = 0;
-        this.xepLoai = "";
-            }
+        this.ngayLam = _ngayLam;
+        this.luongCB = parseFloat(_luongCB);
+        this.chucVu = _chucVu;
+        this.gioLam = parseFloat(_gioLam);
+    }
+
     getTotalSalary() {
-        switch(this.chucVU){
+        switch (this.chucVu) {
             case "Sếp":
-                return this.tbLuongCB *3;
-            case "Trưởng Phòng":
-                return this.tbLuongCB *2;
-            case "Nhân Viên":
-                return this.tbLuongCB*1;
+                return this.luongCB * 3;
+            case "Trưởng phòng":
+                return this.luongCB * 2;
+            case "Nhân viên":
+                return this.luongCB * 1;
             default:
                 return 0;
         }
     }
-    getxepLoai(){
-        switch(this.gioLam){
 
-        }
+    getxepLoai() {
+        if (this.gioLam >= 192) return "Xuất sắc";
+        if (this.gioLam >= 176) return "Giỏi";
+        if (this.gioLam >= 160) return "Khá";
+        return "Trung bình";
     }
 }
+
 
 
 export default Nhan__Vien

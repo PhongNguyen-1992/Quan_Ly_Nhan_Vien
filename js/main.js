@@ -3,17 +3,45 @@ import List_Nhan_Vien from "./listnhanvien.js";
 
 const listNhanVien = new List_Nhan_Vien();
 
-const getEle = (id) => document.getElementById(id);
+const getEle = (id) => {
+    return document.getElementById(id)
+};
+
+
+const setLocalStorage = (data) => {
+  // Chuyển đổi mảng thành string
+  const dataString = JSON.stringify(data);
+  localStorage.setItem("LISTNV", dataString);
+};
+
+/**
+ * Lấy dữ liệu từ localStorage
+ */
+const getLocalStorage = (key) => {
+  const dataString = localStorage.getItem(key);
+
+  // Nếu không có dữ liệu thì trả về
+  if (!dataString) return;
+
+  // Chuyển đổi string thành mảng
+  const dataJson = JSON.parse(dataString);
+  // gán dữ liệu vào mảng arr của foodList
+  listNhanVien.array = dataJson;
+  // Gọi hàm renderFoodList() để hiển thị danh sách món ăn
+  renderListNhanVien(listNhanVien.array);
+};
+
+getLocalStorage("LISTNV");
 
 const getValue = () => {
-    const taiKhoan = getEle("tknv").value.trim();
-    const name = getEle("name").value.trim();
-    const email = getEle("email").value.trim();
-    const passWord = getEle("password").value.trim();
-    const ngayLam = getEle("tbNgay").value;
-    const tbLuongCB = getEle("tbLuongCB").value
+    const taiKhoan = getEle("tknv").value;
+    const name = getEle("name").value;
+    const email = getEle("email").value;
+    const passWord = getEle("password").value;
+    const ngayLam = getEle("datepicker").value;
+    const tbLuongCB = getEle("luongCB").value
     const chucVu = getEle("chucvu").value;
-    const gioLam = getEle("gioLam").value.trim();
+    const gioLam = getEle("gioLam").value;
 
     let isValue = true;
 
@@ -79,48 +107,68 @@ const getValue = () => {
     const regexDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
     if (ngayLam === "") {
         getEle("tbNgay").innerHTML = "(*) Vui lòng nhập Ngày làm";
+        getEle("tbNgay").style.display = "block";
         isValue = false;
     } else if (!regexDate.test(ngayLam)) {
         getEle("tbNgay").innerHTML = "(*) Ngày làm phải đúng định dạng mm/dd/yyyy";
+        getEle("tbNgay").style.display = "block";
+
         isValue = false;
     } else {
         getEle("tbNgay").innerHTML = "";
+        getEle("tbNgay").style.display = "none";
+
     }
 
     const luong = parseFloat(tbLuongCB);
     if (tbLuongCB === "") {
         getEle("tbLuongCB").innerHTML = "(*) Vui lòng nhập Lương cơ bản";
+        getEle("tbLuongCB").style.display = "block";
+
         isValue = false;
     } else if (isNaN(luong) || luong < 1000000 || luong > 20000000) {
         getEle("tbLuongCB").innerHTML = "(*) Lương phải từ 1.000.000 đến 20.000.000";
+        getEle("tbLuongCB").style.display = "block";
+
         isValue = false;
     } else {
         getEle("tbLuongCB").innerHTML = "";
+        getEle("tbLuongCB").style.display = "none";
+
     }
 
-    const chucVuHopLe = ["Giám đốc", "Trưởng Phòng", "Nhân Viên"];
+    const chucVuHopLe = ["Sếp", "Trưởng phòng", "Nhân viên"];
     if (!chucVuHopLe.includes(chucVu)) {
         getEle("tbChucVu").innerHTML = "(*) Vui lòng chọn chức vụ hợp lệ";
+        getEle("tbChucVu").style.display = "block";
+
         isValue = false;
     } else {
         getEle("tbChucVu").innerHTML = "";
+        getEle("tbChucVu").style.display = "none";
+
     }
 
     const gio = parseFloat(gioLam);
     if (gioLam === "") {
         getEle("tbGiolam").innerHTML = "(*) Vui lòng nhập số giờ làm";
+        getEle("tbGiolam").style.display = "block";
         isValue = false;
     } else if (isNaN(gio) || gio < 80 || gio > 200) {
         getEle("tbGiolam").innerHTML = "(*) Giờ làm phải từ 80 đến 200 giờ";
+        getEle("tbGiolam").style.display = "block";
         isValue = false;
     } else {
         getEle("tbGiolam").innerHTML = "";
+        getEle("tbGiolam").style.display = "none";
+
     }
 
     if (!isValue) return null;
 
     const nhanVien = new Nhan__Vien(taiKhoan, name, email, passWord, ngayLam, tbLuongCB, chucVu, gioLam);
     nhanVien.getTotalSalary();
+    nhanVien.getxepLoai();
     return nhanVien;
 };
 
@@ -137,14 +185,19 @@ const renderListNhanVien = (data) => {
                 <td>${nv.ngayLam}</td>
                 <td>${nv.chucVu}</td>
                 <td>${nv.getTotalSalary()}</td>     
+                <td>${nv.getxepLoai()}</td> 
+                <td>Setup</td>     
+
             </tr>
         `;
     }
     getEle("tableDanhSach").innerHTML = contentHTML;
 };
 
+
 getEle("btnThemNV").onclick = function () {
     const nhanVien = getValue();
+    console.log(nhanVien);    
     if (!nhanVien) return;
     listNhanVien.addNhanVien(nhanVien);
     renderListNhanVien(listNhanVien.array);
