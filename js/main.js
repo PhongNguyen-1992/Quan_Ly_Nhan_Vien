@@ -7,31 +7,28 @@ const getEle = (id) => {
     return document.getElementById(id)
 };
 
-
+// Lưu dữ liệu localStorage
 const setLocalStorage = (data) => {
-  // Chuyển đổi mảng thành string
-  const dataString = JSON.stringify(data);
-  localStorage.setItem("LISTNV", dataString);
+    const dataString = JSON.stringify(data);
+    localStorage.setItem("LISTNV", dataString);
 };
 
-/**
- * Lấy dữ liệu từ localStorage
- */
+// Lấy dữ liệu dưới LocalStorage lên
 const getLocalStorage = (key) => {
-  const dataString = localStorage.getItem(key);
-
-  // Nếu không có dữ liệu thì trả về
-  if (!dataString) return;
-
-  // Chuyển đổi string thành mảng
-  const dataJson = JSON.parse(dataString);
-  // gán dữ liệu vào mảng arr của foodList
-  listNhanVien.array = dataJson;
-  // Gọi hàm renderFoodList() để hiển thị danh sách món ăn
-  renderListNhanVien(listNhanVien.array);
+    const dataString = localStorage.getItem(key); // điều kiện đúng dataString có dữ liệu
+    if (!dataString) return; // phủ định là dataString đang rỗng >> dừng
+    const dataJson = JSON.parse(dataString);
+    listNhanVien.array = dataJson;
+    renderListNhanVien(listNhanVien.array);
 };
 
-getLocalStorage("LISTNV");
+// Chỉnh Nút Thêm Ẩn Nút Cập Nhật
+getEle("btnThem").onclick = function () {
+    getEle("btnCapNhat").style.display = "none"
+    getEle("header-title").innerHTML = "Thêm Người Dùng Mới"
+}
+
+
 
 const getValue = () => {
     const taiKhoan = getEle("tknv").value;
@@ -186,19 +183,27 @@ const renderListNhanVien = (data) => {
                 <td>${nv.chucVu}</td>
                 <td>${nv.getTotalSalary()}</td>     
                 <td>${nv.getxepLoai()}</td> 
-                <td>Setup</td>     
+                <td>
+  <div class="d-flex gap-2">
+    <button class="btn btn-info" style="margin-right: 10px;">Edit</button>
+    <button class="btn btn-danger">Delete</button>
+  </div>
+</td>     
 
             </tr>
         `;
     }
-    getEle("tableDanhSach").innerHTML = contentHTML;
+    getEle("tableDanhSach").innerHTML = contentHTML;    
 };
 
-
+getLocalStorage("LISTNV")
 getEle("btnThemNV").onclick = function () {
     const nhanVien = getValue();
-    console.log(nhanVien);    
+    console.log(nhanVien);
     if (!nhanVien) return;
     listNhanVien.addNhanVien(nhanVien);
     renderListNhanVien(listNhanVien.array);
+    setLocalStorage(listNhanVien.array);
+    // Close modal
+    getEle("btnDong").click();
 };
