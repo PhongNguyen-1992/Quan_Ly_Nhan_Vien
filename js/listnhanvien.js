@@ -7,10 +7,23 @@ class List_Nhan_Vien {
     addNhanVien (nhanVien){
         this.array.push(nhanVien);
     }
-    removeNhanVien (){}
-    updateNhanVien(){}
-    seachNhanVien(){}
-    filterNhanVien(){}
+    removeNhanVien (taiKhoan){
+        let index = -1;
+        for (let i = 0; i < this.array.length; i++) {
+            const nv = this.array[i];
+            if (nv.taiKhoan === taiKhoan) {
+                index = i;
+                break;
+            }
+        }
+        if (index !== -1) {
+            this.array.splice(index, 1);
+        }
+    }
+
+    updateNhanVien (){}
+    seachNhanVien (){}
+    filterNhanVien (){}
 }
 
 

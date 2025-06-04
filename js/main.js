@@ -7,23 +7,6 @@ const getEle = (id) => {
     return document.getElementById(id)
 };
 
-// Lưu dữ liệu localStorage
-const setLocalStorage = (data) => {
-    const dataString = JSON.stringify(data);
-    localStorage.setItem("LISTNV", dataString);
-};
-
-// Lấy dữ liệu dưới LocalStorage lên
-const getLocalStorage = () => {
-    const dataString = localStorage.getItem("LISTNV");
-    if (dataString) {
-        const data = JSON.parse(dataString);
-        listNhanVien.array = data
-        renderListNhanVien(listNhanVien.array);
-    }
-};
-// Gọi hàm lấy dữ liệu từ LocalStorage khi trang được tải
-getLocalStorage("LISTNV");
 // Chỉnh út Thêm Ẩn Nút Cập Nhật
 getEle("btnThem").onclick = function () {
     getEle("btnCapNhat").style.display = "none"
@@ -103,7 +86,7 @@ const getValue = () => {
 
     }
 
-    const regexDate = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])\/\d{4}$/;
+    const regexDate = /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
     if (ngayLam === "") {
         getEle("tbNgay").innerHTML = "(*) Vui lòng nhập Ngày làm";
         getEle("tbNgay").style.display = "block";
@@ -168,6 +151,7 @@ const getValue = () => {
     const nhanVien = new Nhan__Vien(taiKhoan, name, email, passWord, ngayLam, tbLuongCB, chucVu, gioLam);
     nhanVien.calTotalSalary();
     nhanVien.tinhXepLoai();
+    nhanVien.getNgayLamFormatted();
     return nhanVien;
 };
 
@@ -184,11 +168,11 @@ const renderListNhanVien = (data) => {
                 <td>${nhanVien.ngayLam}</td>
                 <td>${nhanVien.chucVu}</td>
                 <td>${nhanVien.totalSalary}</td>     
-                <td>${nhanVien.xepLoai}</td> 
+                <td>${nhanVien.xeploai}</td> 
                 <td>
   <div class="d-flex gap-2">
     <button class="btn btn-info" style="margin-right: 10px;">Edit</button>
-    <button class="btn btn-danger">Delete</button>
+    <button class="btn btn-danger" onclick="onDeleteNV('${nhanVien.taiKhoan}')">Delete</button>
   </div>
 </td>     
 
@@ -198,6 +182,30 @@ const renderListNhanVien = (data) => {
     getEle("tableDanhSach").innerHTML = contentHTML;
 };
 
+const onDeleteNV = (taiKhoan) => {
+    listNhanVien.removeNhanVien(taiKhoan);
+    renderListNhanVien(listNhanVien.array);
+    setLocalStorage(listNhanVien.array);
+};
+// khai báo đối tượng onDeleteNV ra đối tượng window
+window.onDeleteNV = onDeleteNV;
+
+const setLocalStorage = (data) => {
+    const dataString = JSON.stringify(data);
+    localStorage.setItem("LISTNV", dataString);
+};
+
+// Lấy dữ liệu dưới LocalStorage lên
+const getLocalStorage = () => {
+    const dataString = localStorage.getItem("LISTNV");
+    if (dataString) {
+        const data = JSON.parse(dataString);
+        listNhanVien.array = data
+        renderListNhanVien(listNhanVien.array);
+    }
+};
+// Gọi hàm lấy dữ liệu từ LocalStorage khi trang được tải
+getLocalStorage("LISTNV");
 
 getEle("btnThemNV").onclick = function () {
     const nhanVien = getValue();
