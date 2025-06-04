@@ -14,15 +14,17 @@ const setLocalStorage = (data) => {
 };
 
 // Lấy dữ liệu dưới LocalStorage lên
-const getLocalStorage = (key) => {
-    const dataString = localStorage.getItem(key); // điều kiện đúng dataString có dữ liệu
-    if (!dataString) return; // phủ định là dataString đang rỗng >> dừng
-    const dataJson = JSON.parse(dataString);
-    listNhanVien.array = dataJson;
-    renderListNhanVien(listNhanVien.array);
+const getLocalStorage = () => {
+    const dataString = localStorage.getItem("LISTNV");
+    if (dataString) {
+        const data = JSON.parse(dataString);
+        listNhanVien.array = data
+        renderListNhanVien(listNhanVien.array);
+    }
 };
-
-// Chỉnh Nút Thêm Ẩn Nút Cập Nhật
+// Gọi hàm lấy dữ liệu từ LocalStorage khi trang được tải
+getLocalStorage("LISTNV");
+// Chỉnh út Thêm Ẩn Nút Cập Nhật
 getEle("btnThem").onclick = function () {
     getEle("btnCapNhat").style.display = "none"
     getEle("header-title").innerHTML = "Thêm Người Dùng Mới"
@@ -164,25 +166,25 @@ const getValue = () => {
     if (!isValue) return null;
 
     const nhanVien = new Nhan__Vien(taiKhoan, name, email, passWord, ngayLam, tbLuongCB, chucVu, gioLam);
-    nhanVien.getTotalSalary();
-    nhanVien.getxepLoai();
+    nhanVien.calTotalSalary();
+    nhanVien.tinhXepLoai();
     return nhanVien;
 };
 
 const renderListNhanVien = (data) => {
     let contentHTML = "";
     for (let i = 0; i < data.length; i++) {
-        const nv = data[i];
+        const nhanVien = data[i];
         contentHTML += `
             <tr>
                 <td>${i + 1}</td>
-                <td>${nv.taiKhoan}</td>
-                <td>${nv.name}</td>
-                <td>${nv.email}</td>
-                <td>${nv.ngayLam}</td>
-                <td>${nv.chucVu}</td>
-                <td>${nv.getTotalSalary()}</td>     
-                <td>${nv.getxepLoai()}</td> 
+                <td>${nhanVien.taiKhoan}</td>
+                <td>${nhanVien.name}</td>
+                <td>${nhanVien.email}</td>
+                <td>${nhanVien.ngayLam}</td>
+                <td>${nhanVien.chucVu}</td>
+                <td>${nhanVien.totalSalary}</td>     
+                <td>${nhanVien.xepLoai}</td> 
                 <td>
   <div class="d-flex gap-2">
     <button class="btn btn-info" style="margin-right: 10px;">Edit</button>
@@ -193,10 +195,10 @@ const renderListNhanVien = (data) => {
             </tr>
         `;
     }
-    getEle("tableDanhSach").innerHTML = contentHTML;    
+    getEle("tableDanhSach").innerHTML = contentHTML;
 };
 
-getLocalStorage("LISTNV")
+
 getEle("btnThemNV").onclick = function () {
     const nhanVien = getValue();
     console.log(nhanVien);

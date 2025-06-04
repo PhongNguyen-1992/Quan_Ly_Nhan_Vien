@@ -8,26 +8,32 @@ class Nhan__Vien {
         this.luongCB = parseFloat(_luongCB);
         this.chucVu = _chucVu;
         this.gioLam = parseFloat(_gioLam);
+        this.totalSalary = 0;
+        this.xeploai = "";
     }
 
-    getTotalSalary() {
-        switch (this.chucVu) {
-            case "Sếp":
-                return this.luongCB * 3;
-            case "Trưởng phòng":
-                return this.luongCB * 2;
-            case "Nhân viên":
-                return this.luongCB * 1;
-            default:
-                return 0;
+    calTotalSalary() {              
+    if (this.chucVu === "Sếp") {
+        this.totalSalary = this.luongCB * 3;
+    } else if (this.chucVu === "Trưởng phòng") {
+        this.totalSalary = this.luongCB * 2;
+    } else if (this.chucVu === "Nhân viên") {
+        this.totalSalary = this.luongCB * 1;
+    } else {
+        this.totalSalary = 0;
+    }
+}
+
+    tinhXepLoai() {
+        if(this.gioLam<160){
+            this.xeploai = "Trung Bình"
+        } else if(this.gioLam >= 160 && this.gioLam< 176){
+            this.xeploai = "Khá"
+        } else if (this.gioLam >=176 && this.gioLam<190){
+            this.xeploai = " Giỏi"
+        } else {
+            this.xeploai = "Xuất Sắc"
         }
-    }
-
-    getxepLoai() {
-        if (this.gioLam >= 192) return "Xuất sắc";
-        if (this.gioLam >= 176) return "Giỏi";
-        if (this.gioLam >= 160) return "Khá";
-        return "Trung bình";
     }
 }
 

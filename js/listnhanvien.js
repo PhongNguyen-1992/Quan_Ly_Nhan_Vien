@@ -4,8 +4,8 @@ class List_Nhan_Vien {
 
     }
 
-    addNhanVien (nv){
-        this.array.push(nv);
+    addNhanVien (nhanVien){
+        this.array.push(nhanVien);
     }
     removeNhanVien (){}
     updateNhanVien(){}
