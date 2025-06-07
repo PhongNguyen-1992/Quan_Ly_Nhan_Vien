@@ -29,7 +29,7 @@ class Nhan__Vien {
             this.xeploai = "Trung Bình"
         } else if(this.gioLam >= 160 && this.gioLam< 176){
             this.xeploai = "Khá"
-        } else if (this.gioLam >=176 && this.gioLam<190){
+        } else if (this.gioLam >=176 && this.gioLam<192){
             this.xeploai = " Giỏi"
         } else {
             this.xeploai = "Xuất Sắc"

@@ -16,10 +16,8 @@ getEle("btnThem").onclick = function () {
     getEle("tknv").disabled = false; // Mở quyền sử do khi cập nhật đã khóa
     resetForm(); // xóa form
 
-}
-
-
-
+};
+// Hàm lấy giá trị từ form và kiểm tra tính hợp lệ
 const getValue = () => {
     const taiKhoan = getEle("tknv").value;
     const name = getEle("name").value;
@@ -31,7 +29,16 @@ const getValue = () => {
     const gioLam = getEle("gioLam").value;
 
     let isValue = true;
-
+    getEle("tknv").addEventListener("blur", function () {
+        const taiKhoan = getEle("tknv").value;
+        if (listNhanVien.findIndex(taiKhoan) !== -1) {
+            getEle("tbTKNV").innerHTML = "(*) Tài khoản đã tồn tại";
+            getEle("tbTKNV").style.display = "block";
+        } else {
+            getEle("tbTKNV").innerHTML = "";
+            getEle("tbTKNV").style.display = "none";
+        }
+    });
     const regexTaiKhoan = /^\d{4,6}$/;
     if (taiKhoan === "") {
         getEle("tbTKNV").innerHTML = `(*) Vui lòng nhập Tài Khoản`;
@@ -162,7 +169,7 @@ const getValue = () => {
 const renderListNhanVien = (data) => {
     let contentHTML = "";
     for (let i = 0; i < data.length; i++) {
-        const nhanVien = data[i];   
+        const nhanVien = data[i];
         contentHTML += `
             <tr>
                 <td>${i + 1}</td>
@@ -244,15 +251,13 @@ getEle("btnCapNhat").onclick = function () {
 // khai báo đối tượng onDeleteNV ra đối tượng window
 window.onDeleteNV = onDeleteNV;
 // Hàm tìm kiếm nhân viên dựa xếp loại
-
 const onSearch = () => {
     const searchValue = getEle("searchName").value.toLowerCase();
     const filteredList = listNhanVien.array.filter(nv => nv.xeploai.toLowerCase().includes(searchValue));
     renderListNhanVien(filteredList);
-};  
+};
 // Gọi hàm tìm kiếm khi người dùng nhập vào ô tìm kiếm
 getEle("searchName").addEventListener("input", onSearch);
-
 
 
 // Sét dữ liệu xuống LocalStorage
