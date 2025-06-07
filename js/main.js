@@ -9,8 +9,13 @@ const getEle = (id) => {
 
 // Chỉnh út Thêm Ẩn Nút Cập Nhật
 getEle("btnThem").onclick = function () {
+    getEle("btnThemNV").style.display = "block";
+
     getEle("btnCapNhat").style.display = "none"
     getEle("header-title").innerHTML = "Thêm Người Dùng Mới"
+    getEle("tknv").disabled = false; // Mở quyền sử do khi cập nhật đã khóa
+    resetForm(); // xóa form
+
 }
 
 
@@ -151,14 +156,13 @@ const getValue = () => {
     const nhanVien = new Nhan__Vien(taiKhoan, name, email, passWord, ngayLam, tbLuongCB, chucVu, gioLam);
     nhanVien.calTotalSalary();
     nhanVien.tinhXepLoai();
-    nhanVien.getNgayLamFormatted();
     return nhanVien;
 };
 
 const renderListNhanVien = (data) => {
     let contentHTML = "";
     for (let i = 0; i < data.length; i++) {
-        const nhanVien = data[i];
+        const nhanVien = data[i];   
         contentHTML += `
             <tr>
                 <td>${i + 1}</td>
@@ -171,7 +175,7 @@ const renderListNhanVien = (data) => {
                 <td>${nhanVien.xeploai}</td> 
                 <td>
   <div class="d-flex gap-2">
-    <button class="btn btn-info" style="margin-right: 10px;">Edit</button>
+    <button class="btn btn-info" style="margin-right: 10px;" data-toggle="modal" data-target="#myModal" onclick="onEditNV('${nhanVien.taiKhoan}')">Edit</button>
     <button class="btn btn-danger" onclick="onDeleteNV('${nhanVien.taiKhoan}')">Delete</button>
   </div>
 </td>     
@@ -181,20 +185,81 @@ const renderListNhanVien = (data) => {
     }
     getEle("tableDanhSach").innerHTML = contentHTML;
 };
+const resetForm = () => {
+    getEle("formDangKy").reset();
+}
+// Nút Thêm Nhân Viên/ reset form
+getEle("btnThemNV").onclick = function () {
+    const nhanVien = getValue();
+    if (!nhanVien) return;
+    listNhanVien.addNhanVien(nhanVien);
+    renderListNhanVien(listNhanVien.array);
+    setLocalStorage(listNhanVien.array);
+    // Close modal
+    getEle("btnDong").click();
 
+};
+
+// Nút Delete
 const onDeleteNV = (taiKhoan) => {
     listNhanVien.removeNhanVien(taiKhoan);
     renderListNhanVien(listNhanVien.array);
     setLocalStorage(listNhanVien.array);
 };
+// Nút Edit
+const onEditNV = (taiKhoan) => {
+    getEle("btnCapNhat").style.display = "block";
+    getEle("btnThemNV").style.display = "none";
+    getEle("header-title").innerHTML = "Cập Nhật Nhân Viên";
+    const nhanVien = listNhanVien.getNhanVien(taiKhoan);
+    if (!nhanVien) return;
+    //Hien thị thông tin nhân viên lên form
+    getEle("tknv").disabled = true; // Khóa quyền sử
+    getEle("tknv").value = nhanVien.taiKhoan;
+    getEle("name").value = nhanVien.name;
+    getEle("email").value = nhanVien.email;
+    getEle("password").value = nhanVien.passWord;
+    getEle("datepicker").value = nhanVien.ngayLam;
+    getEle("luongCB").value = nhanVien.luongCB;
+    getEle("chucvu").value = nhanVien.chucVu;
+    getEle("gioLam").value = nhanVien.gioLam;
+
+    // Close modal
+    getEle("btnDong").click();
+};
+window.onEditNV = onEditNV;
+// Nút Cập Nhật
+getEle("btnCapNhat").onclick = function () {
+    const nhanVien = getValue();
+    if (!nhanVien) return;
+    console.log(nhanVien);
+    listNhanVien.updateNhanVien(nhanVien);
+    renderListNhanVien(listNhanVien.array);
+    setLocalStorage(listNhanVien.array);
+    getEle("btnDong").click();
+
+
+
+}
 // khai báo đối tượng onDeleteNV ra đối tượng window
 window.onDeleteNV = onDeleteNV;
+// Hàm tìm kiếm nhân viên dựa xếp loại
 
+const onSearch = () => {
+    const searchValue = getEle("searchName").value.toLowerCase();
+    const filteredList = listNhanVien.array.filter(nv => nv.xeploai.toLowerCase().includes(searchValue));
+    renderListNhanVien(filteredList);
+};  
+// Gọi hàm tìm kiếm khi người dùng nhập vào ô tìm kiếm
+getEle("searchName").addEventListener("input", onSearch);
+
+
+
+// Sét dữ liệu xuống LocalStorage
 const setLocalStorage = (data) => {
     const dataString = JSON.stringify(data);
     localStorage.setItem("LISTNV", dataString);
 };
-
 // Lấy dữ liệu dưới LocalStorage lên
 const getLocalStorage = () => {
     const dataString = localStorage.getItem("LISTNV");
@@ -207,13 +272,3 @@ const getLocalStorage = () => {
 // Gọi hàm lấy dữ liệu từ LocalStorage khi trang được tải
 getLocalStorage("LISTNV");
 
-getEle("btnThemNV").onclick = function () {
-    const nhanVien = getValue();
-    console.log(nhanVien);
-    if (!nhanVien) return;
-    listNhanVien.addNhanVien(nhanVien);
-    renderListNhanVien(listNhanVien.array);
-    setLocalStorage(listNhanVien.array);
-    // Close modal
-    getEle("btnDong").click();
-};

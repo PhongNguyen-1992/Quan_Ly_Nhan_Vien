@@ -124,7 +124,10 @@
 						<div class="row mb-3">
 							<div class="col">
 								<div class="input-group">
-									<input type="text" class="form-control" placeholder="Loại nhân viên" id="searchName">
+									<div class="col-sm-10">
+										<input type="text" class="form-control" id="searchName"
+											placeholder="Nhập tên nhân viên cần tìm kiếm...">
+									</div>
 									<div class="input-group-prepend">
 										<span class="input-group-text" id="btnTimNV"><i class="fa fa-search"></i></span>
 									</div>
@@ -135,15 +138,15 @@
 							<thead class="text-primary">
 								<tr>
 									<th>STT</th>
-									<th class="nowrap">										
+									<th class="nowrap">
 										<span class="mr-1">Tài khoản</span>
 										<i class="fa fa-arrow-up" id="SapXepTang"></i>
 										<i class="fa fa-arrow-down" id="SapXepGiam"></i>
-									</th>									
+									</th>
 									<th>Họ và tên</th>
 									<th>Email</th>
 									<th>Ngày làm</th>
-									<th>Chức vụ</th>									
+									<th>Chức vụ</th>
 									<th>Tổng lương</th>
 									<th>Xếp loại</th>
 									<th><em class="fa fa-cog"></em></th>
@@ -188,7 +191,7 @@
 				<!-- Modal body -->
 				<div class="modal-body">
 
-					<form role="form">
+					<form role="form" id="formDangKy">
 
 						<div class="form-group">
 							<div class="input-group">
@@ -247,7 +250,7 @@
 
 							<span class="sp-thongbao" id="tbNgay"></span>
 						</div>
-						
+
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -276,7 +279,8 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text"><i class="fa fa-clock-o" aria-hidden="true"></i></span>
+									<span class="input-group-text"><i class="fa fa-clock-o"
+											aria-hidden="true"></i></span>
 								</div>
 								<input type="text" name="gioLam" id="gioLam" class="form-control input-sm"
 									placeholder="Giờ làm">
@@ -297,7 +301,7 @@
 			</div>
 		</div>
 	</div>
-<script type="module" src="./js/main.js"></script>
+	<script type="module" src="./js/main.js"></script>
 	<!-- Bootstrap -->
 	<script src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/jquery.easing.min.js"></script>
